@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             "https://it.wikipedia.org/w/api.php?action=query&generator=random&grnnamespace=0&grnlimit=20&prop=extracts|info&inprop=url&exintro=1&explaintext=1&format=json&origin=*";
 
         // Words used to filter out boring articles
-        const boringWords = ["comune"];
+        const boringWords = ["comune", "film", "attore", "calciatore"];
 
         // Keep fetching until a valid article is found
         while (true) {
@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     function initAndSpinReel(reelElement, itemsArray) {
         itemsArray.forEach((text) => {
             const li = document.createElement("li");
-            li.innerHTML = text; // InnerHTML in order to use elements for styling
+            li.innerHTML = text;
             reelElement.appendChild(li);
         });
         reelElement.classList.add("spinning");
@@ -56,7 +56,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         // Add the winning item at the end of the reel
         const winnerArticle = document.createElement("li");
         winnerArticle.classList.add("winner");
-        winnerArticle.innerHTML = winnerContent;
+
+        if (winnerContent instanceof Node) {
+            winnerArticle.appendChild(winnerContent);
+        } else {
+            winnerArticle.innerHTML = winnerContent;
+        }
+
         reelElement.appendChild(winnerArticle);
 
         // Remove the infinite spin class
@@ -105,10 +111,17 @@ document.addEventListener("DOMContentLoaded", async () => {
     const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
     // Wait for fetch completion and minimum spin time
-    const [winnerContent] = await Promise.all([fetchArticle(), wait(3500)]);
-    const centralWinnerText = winnerContent
-        ? `<a href="${winnerContent.fullurl}" class="article-link">${winnerContent.title}</a>`
-        : "Network Error";
+    const [fetchedData] = await Promise.all([fetchArticle(), wait(3500)]);
+
+    let centralWinnerNode;
+    if (fetchedData) {
+        centralWinnerNode = document.createElement("a");
+        centralWinnerNode.href = fetchedData.fullurl;
+        centralWinnerNode.className = "article-link";
+        centralWinnerNode.textContent = fetchedData.title;
+    } else {
+        centralWinnerNode = document.createTextNode("Network Error");
+    }
 
     // Winning text for side reels
     const sideWinnerText = "-----";
@@ -120,7 +133,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Wait 500ms, then stop center reel
     await wait(500);
-    stopReel(centralReel, placeholderArticles.length, centralWinnerText);
+    stopReel(centralReel, placeholderArticles.length, centralWinnerNode);
 
     // Wait 500ms, then stop right reel
     await wait(500);
