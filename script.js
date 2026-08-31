@@ -1,29 +1,27 @@
 document.addEventListener("DOMContentLoaded", async () => {
-    const reel = document.getElementById("reel");
-    const itemHeight = 100;
+    const centralReel = document.getElementById("article-reel");
+    const leftReel = document.getElementById("left-reel");
+    const rightReel = document.getElementById("right-reel");
 
+    const itemHeight = 120;
+
+    // Fetch a random Wikipedia article
     async function fetchArticle() {
         const url =
-            "https://it.wikipedia.org/w/api.php?action=query&generator=random&grnnamespace=0&grnlimit=20&prop=extracts&exintro=1&explaintext=1&format=json&origin=*";
+            "https://it.wikipedia.org/w/api.php?action=query&generator=random&grnnamespace=0&grnlimit=20&prop=extracts|info&inprop=url&exintro=1&explaintext=1&format=json&origin=*";
 
-        // Words/Phrases used to filter articles
-        const boringWords = [
-            "comune",
-            "frazione",
-            "villaggio",
-            "asteroide",
-            "insetto",
-        ];
+        // Words used to filter out boring articles
+        const boringWords = ["comune"];
 
-        // Fetch until valid article
+        // Keep fetching until a valid article is found
         while (true) {
             try {
                 const response = await fetch(url);
                 const data = await response.json();
-
                 const pages = Object.values(data.query.pages);
-                // Search for valid page
                 for (const page of pages) {
+                    console.log(page);
+
                     const intro = page.extract
                         ? page.extract.toLowerCase()
                         : "";
@@ -34,18 +32,54 @@ document.addEventListener("DOMContentLoaded", async () => {
                         page.title.startsWith("Lista di") ||
                         page.title.startsWith("Episodi di");
 
-                    if (!isBoring && !isList) {
-                        return page;
-                    }
+                    if (!isBoring && !isList) return page;
                 }
             } catch (error) {
-                console.error("Errore nel recupero API:", error);
+                console.error("Error during fetch:", error);
                 return null;
             }
         }
     }
 
-    // Setup placeholder items
+    // Populate a reel with items and start spinning
+    function initAndSpinReel(reelElement, itemsArray) {
+        itemsArray.forEach((text) => {
+            const li = document.createElement("li");
+            li.innerHTML = text; // InnerHTML in order to use elements for styling
+            reelElement.appendChild(li);
+        });
+        reelElement.classList.add("spinning");
+    }
+
+    // Stop a reel on the winning item
+    function stopReel(reelElement, totalPlaceholders, winnerContent) {
+        // Add the winning item at the end of the reel
+        const winnerArticle = document.createElement("li");
+        winnerArticle.classList.add("winner");
+        winnerArticle.innerHTML = winnerContent;
+        reelElement.appendChild(winnerArticle);
+
+        // Remove the infinite spin class
+        reelElement.classList.remove("spinning");
+
+        // Reset position to prepare for the braking animation
+        reelElement.style.transition = "none";
+        reelElement.style.transform = "translateY(0px)";
+
+        // Force browser reflow
+        void reelElement.offsetWidth;
+
+        // Apply braking animation
+        reelElement.style.transition = "";
+        reelElement.classList.add("braking");
+
+        // Calculate final position and scroll
+        const targetY = -(totalPlaceholders * itemHeight);
+        reelElement.style.transform = `translateY(${targetY}px)`;
+    }
+
+    // --- INITIAL SETUP ---
+
     const placeholderArticles = [
         "Articolo 1",
         "Articolo 2",
@@ -57,40 +91,38 @@ document.addEventListener("DOMContentLoaded", async () => {
         "Articolo 8",
         "Articolo 9",
         "Articolo 10",
-        "Articolo 1", // Repeat n.1 for looping animation
+        "Articolo 1",
     ];
 
-    let spinHTML = "";
-    placeholderArticles.forEach((title) => {
-        spinHTML += `<li>${title}</li>`;
-    });
-    reel.innerHTML = spinHTML;
+    // Filler items for the side reels (e.g., 11 "BAR" items)
+    const fillerItems = Array(11).fill("-----");
 
-    // Reel spin animation and article searching
-    reel.classList.add("spinning");
+    // Start spinning all three reels
+    initAndSpinReel(leftReel, fillerItems);
+    initAndSpinReel(centralReel, placeholderArticles);
+    initAndSpinReel(rightReel, fillerItems);
 
     const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-    const [articleWinner] = await Promise.all([fetchArticle(), wait(3500)]);
 
-    // Braking
-    let brakeHTML = "";
-    placeholderArticles.forEach((title) => {
-        brakeHTML += `<li>${title}</li>`;
-    });
+    // Wait for fetch completion and minimum spin time
+    const [winnerContent] = await Promise.all([fetchArticle(), wait(3500)]);
+    const centralWinnerText = winnerContent
+        ? `<a href="${winnerContent.fullurl}" class="article-link">${winnerContent.title}</a>`
+        : "Network Error";
 
-    brakeHTML += `<li class="winner" style="font-weight: bold; color: gold;">`;
-    brakeHTML += articleWinner ? articleWinner.title : "Errore di ricerca";
-    brakeHTML += `</li>`;
-    reel.innerHTML = brakeHTML;
+    // Winning text for side reels
+    const sideWinnerText = "-----";
 
-    reel.classList.remove("spinning");
+    // --- SEQUENTIAL BRAKING ---
 
-    reel.style.transition = "none";
-    reel.style.transform = "translateY(0px)";
-    void reel.offsetWidth;
-    reel.style.transition = "";
-    reel.classList.add("braking");
+    // Stop left reel
+    stopReel(leftReel, fillerItems.length, sideWinnerText);
 
-    const targetY = -(placeholderArticles.length * itemHeight);
-    reel.style.transform = `translateY(${targetY}px)`;
+    // Wait 500ms, then stop center reel
+    await wait(500);
+    stopReel(centralReel, placeholderArticles.length, centralWinnerText);
+
+    // Wait 500ms, then stop right reel
+    await wait(500);
+    stopReel(rightReel, fillerItems.length, sideWinnerText);
 });

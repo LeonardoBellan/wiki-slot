@@ -1,79 +1,109 @@
-/* Stile generale della pagina */
 body {
     margin: 0;
     padding: 0;
     height: 100vh;
+
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: #1a1a1a;
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    color: white;
+
+    background-color: #f8f8f4;
+    background-image: radial-gradient(circle, #000 1.5px, transparent 1.5px);
+    background-size: 20px 20px;
+
+    font-family: "Arial Black", Impact, "Segoe UI", sans-serif;
+    color: #000;
 }
 
-/* Struttura della Slot Machine */
 .slot-machine {
-    background: linear-gradient(145deg, #e74c3c, #c0392b);
-    padding: 30px 20px;
-    border-radius: 20px;
-    box-shadow:
-        0 15px 35px rgba(0, 0, 0, 0.5),
-        inset 0 5px 15px rgba(255, 255, 255, 0.2);
-    text-align: center;
+    padding: 40px 30px;
     width: 90%;
-    max-width: 400px;
+    max-width: 450px;
+
+    background-color: #ffd100;
+
+    border: 4px solid #000;
+    box-shadow: 12px 12px 0px #000;
+    border-radius: 0;
+
+    text-align: center;
 }
 
 .slot-machine h2 {
     margin-top: 0;
-    font-size: 1.1rem;
+    margin-bottom: 30px;
+
+    font-size: 1.5rem;
     text-transform: uppercase;
-    letter-spacing: 2px;
-    color: #f1c40f;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-    margin-bottom: 20px;
+    letter-spacing: 3px;
+
+    color: #000;
+    background-color: #fff;
+    display: inline-block;
+    padding: 10px 20px;
+    border: 3px solid #000;
+    box-shadow: 5px 5px 0px #000;
 }
 
-/* La finestra in cui scorrono le parole */
-.slot-window {
-    background-color: #f8f9fa;
-    border: 4px solid #2c3e50;
-    border-radius: 10px;
-    height: 100px; /* Altezza esatta di UN elemento */
-    overflow: hidden;
+.separator {
+    width: 6px; /* Spessore netto */
+    height: 100%; /* Prende tutta l'altezza del display (100px) */
+    background-color: #000;
+    margin: 0; /* Rimuoviamo il margine per incollare i rulli al separatore */
+    z-index: 3;
+}
+
+/* Display */
+.slot-display {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0;
+
     position: relative;
-    box-shadow: inset 0 10px 20px rgba(0, 0, 0, 0.3);
+    height: 120px;
+
+    background-color: #000; /* Fondo nero per riempire micro-fessure */
+    border: 4px solid #000;
+    padding: 0; /* RIMOSSO il padding laterale */
+    overflow: hidden; /* Assicura che nulla sbordi dagli angoli */
 }
 
-/* Effetto ombra sopra e sotto per simulare la rotondità del rullo */
-.slot-window::before,
-.slot-window::after {
+.slot-display::before,
+.slot-display::after {
     content: "";
     position: absolute;
     left: 0;
     right: 0;
-    height: 25px;
+    height: 20px;
     z-index: 2;
     pointer-events: none;
+    background-color: rgba(0, 0, 0, 0.15);
 }
-.slot-window::before {
+.slot-display::before {
     top: 0;
-    background: linear-gradient(
-        to bottom,
-        rgba(248, 249, 250, 1) 0%,
-        rgba(248, 249, 250, 0) 100%
-    );
+    border-bottom: 2px solid #000;
 }
-.slot-window::after {
+.slot-display::after {
     bottom: 0;
-    background: linear-gradient(
-        to top,
-        rgba(248, 249, 250, 1) 0%,
-        rgba(248, 249, 250, 0) 100%
-    );
+    border-top: 2px solid #000;
 }
 
-/* Il Rullo */
+/* Slot windows */
+.slot-window {
+    height: 100%;
+    width: 150px;
+    overflow: hidden;
+    background-color: transparent;
+    border: none;
+}
+
+.slot-window:has(#article-reel) {
+    width: 400px;
+}
+
+/* Reel */
 .reel {
     margin: 0;
     padding: 0;
@@ -82,25 +112,39 @@ body {
 }
 
 .reel li {
-    height: 100px; /* Deve corrispondere all'altezza di .slot-window */
+    height: 120px;
+    /* Usiamo il padding interno qui per non far toccare il testo ai bordi neri */
+    padding: 0 15px;
+
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 1.3rem;
-    font-weight: bold;
-    color: #2c3e50;
-    padding: 0 15px;
+
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: #000;
+
+    background-color: #f4f4f0;
+    border-bottom: 4px solid #000;
+    box-shadow: inset 0 -8px 0px rgba(0, 0, 0, 0.15);
+
     box-sizing: border-box;
     text-align: center;
     line-height: 1.2;
 }
 
-/* 1. Animazione del loop iniziale (velocissima) */
+/* Stile per il link cliccabile nel rullo */
+.article-link {
+    color: #000;
+    text-decoration: none; /* Rimuove la sottolineatura di base */
+    border-bottom: 3px solid #000; /* Creiamo una sottolineatura spessa e netta */
+    transition: all 0.2s ease;
+}
+
 .spinning {
     animation: spinLoop 0.3s linear infinite;
 }
 
-/* Avendo 4 voci base, il rullo scorre di 400px (4x100). */
 @keyframes spinLoop {
     0% {
         transform: translateY(0);
@@ -110,8 +154,6 @@ body {
     }
 }
 
-/* 2. Animazione della frenata (creata applicando questa classe in JS) */
 .braking {
-    /* La curva cubic-bezier crea l'effetto realistico della ruota che frena dolcemente */
     transition: transform 2.5s cubic-bezier(0.15, 0.85, 0.15, 1);
 }

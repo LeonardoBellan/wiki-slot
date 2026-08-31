@@ -3,23 +3,29 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Wiki Slot Machine</title>
+        <title>Wiki</title>
         <link rel="stylesheet" href="styles.css" />
     </head>
     <body>
         <div class="slot-machine">
-            <h2>Il tuo nome in codice è...</h2>
+            <h2>Wiki-Slot</h2>
 
-            <div class="slot-window">
-                <ul class="reel" id="reel">
-                    <!-- Voci temporanee durante il caricamento -->
-                    <li>Scansionando...</li>
-                    <li>Mescolando...</li>
-                    <li>Connettendo...</li>
-                    <li>Ricerca API...</li>
-                    <!-- Il primo elemento è duplicato qui in fondo per rendere il loop invisibile -->
-                    <li>Scansionando...</li>
-                </ul>
+            <div class="slot-display">
+                <div class="slot-window">
+                    <ul class="reel" id="left-reel"></ul>
+                </div>
+
+                <div class="separator"></div>
+
+                <div class="slot-window">
+                    <ul class="reel" id="article-reel"></ul>
+                </div>
+
+                <div class="separator"></div>
+
+                <div class="slot-window">
+                    <ul class="reel" id="right-reel"></ul>
+                </div>
             </div>
         </div>
 
