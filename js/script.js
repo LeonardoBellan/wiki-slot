@@ -101,7 +101,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     ];
 
     // Filler items for the side reels (e.g., 11 "BAR" items)
-    const fillerItems = Array(11).fill("-----");
+    const fillerItems = Array(11).fill("---");
 
     // Start spinning all three reels
     initAndSpinReel(leftReel, fillerItems);
@@ -124,7 +124,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     // Winning text for side reels
-    const sideWinnerText = "-----";
+    const sideWinnerText = "---";
 
     // --- SEQUENTIAL BRAKING ---
 

@@ -1,7 +1,7 @@
 body {
     margin: 0;
-    padding: 0;
-    height: 100vh;
+    padding: 16px;
+    height: 100dvh;
 
     display: flex;
     flex-direction: column;
@@ -18,8 +18,8 @@ body {
 
 .slot-machine {
     padding: 40px 30px;
-    width: 90%;
-    max-width: 450px;
+    width: 70dvw;
+    max-width: 380px;
 
     background-color: #ffd100;
 
@@ -47,10 +47,11 @@ body {
 }
 
 .separator {
-    width: 6px; /* Spessore netto */
-    height: 100%; /* Prende tutta l'altezza del display (100px) */
+    width: 6px;
+    height: 100%;
+    margin: 0;
+
     background-color: #000;
-    margin: 0; /* Rimuoviamo il margine per incollare i rulli al separatore */
     z-index: 3;
 }
 
@@ -120,7 +121,7 @@ body {
     justify-content: center;
     align-items: center;
 
-    font-size: 1.5rem;
+    font-size: 1rem;
     font-weight: 900;
     color: #000;
 
