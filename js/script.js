@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const centralReel = document.getElementById("article-reel");
     const leftReel = document.getElementById("left-reel");
     const rightReel = document.getElementById("right-reel");
+    const descriptionPaper = document.getElementById("description");
 
     const itemHeight = 120;
 
@@ -123,19 +124,29 @@ document.addEventListener("DOMContentLoaded", async () => {
         centralWinnerNode = document.createTextNode("Network Error");
     }
 
-    // Winning text for side reels
     const sideWinnerText = "---";
+
+    const descriptionText = fetchedData.extract;
 
     // --- SEQUENTIAL BRAKING ---
 
     // Stop left reel
     stopReel(leftReel, fillerItems.length, sideWinnerText);
 
-    // Wait 500ms, then stop center reel
+    // Stop right reel
+    await wait(500);
+    stopReel(rightReel, fillerItems.length, sideWinnerText);
+
+    // Stop left reel
     await wait(500);
     stopReel(centralReel, placeholderArticles.length, centralWinnerNode);
 
-    // Wait 500ms, then stop right reel
+    // --- PRINT DESCRIPTION ---
+
+    descriptionPaper.textContent = descriptionText;
+    let height = descriptionPaper.offsetHeight;
+    descriptionPaper.style.transform = `translateY(-${height}px)`;
+
     await wait(500);
-    stopReel(rightReel, fillerItems.length, sideWinnerText);
+    descriptionPaper.classList.add("printing");
 });
