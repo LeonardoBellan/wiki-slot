@@ -12,7 +12,7 @@ body {
     background-image: radial-gradient(circle, #000 1.5px, transparent 1.5px);
     background-size: 20px 20px;
 
-    font-family: "Arial Black", Impact, "Segoe UI", sans-serif;
+    font-family: "Arial Black", Impact, "Segoe UI", "Roboto", sans-serif;
     color: #000;
 }
 

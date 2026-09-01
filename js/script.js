@@ -1,3 +1,5 @@
+import { placeholderArticles } from "./placeholders.js";
+
 document.addEventListener("DOMContentLoaded", async () => {
     const centralReel = document.getElementById("article-reel");
     const leftReel = document.getElementById("left-reel");
@@ -86,20 +88,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     // --- INITIAL SETUP ---
-
-    const placeholderArticles = [
-        "Articolo 1",
-        "Articolo 2",
-        "Articolo 3",
-        "Articolo 4",
-        "Articolo 5",
-        "Articolo 6",
-        "Articolo 7",
-        "Articolo 8",
-        "Articolo 9",
-        "Articolo 10",
-        "Articolo 1",
-    ];
 
     // Filler items for the side reels (e.g., 11 "BAR" items)
     const fillerItems = Array(11).fill("---");
