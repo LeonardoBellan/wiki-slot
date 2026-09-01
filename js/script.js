@@ -126,8 +126,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const sideWinnerText = "---";
 
-    const descriptionText = fetchedData.extract;
-
     // --- SEQUENTIAL BRAKING ---
 
     // Stop left reel
@@ -142,10 +140,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     stopReel(centralReel, placeholderArticles.length, centralWinnerNode);
 
     // --- PRINT DESCRIPTION ---
-
+    const descriptionText = fetchedData
+        ? fetchedData.extract
+        : "Descrizione non disponibile.";
     descriptionPaper.textContent = descriptionText;
-    let height = descriptionPaper.offsetHeight;
-    descriptionPaper.style.transform = `translateY(-${height}px)`;
 
     await wait(500);
     descriptionPaper.classList.add("printing");

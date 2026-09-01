@@ -173,14 +173,14 @@ body {
 }
 
 .description {
+    transform: translateY(-100%);
     max-height: 100%;
     margin-top: -0.75rem;
     padding: 1rem 1rem 0.5rem;
 
-    visibility: hidden;
     display: inline-block;
     box-sizing: border-box;
-    overflow: scroll;
+    overflow-y: scroll;
 
     background-color: #fff;
     border: 3px solid #000;
@@ -191,12 +191,30 @@ body {
 }
 
 .printing {
-    visibility: visible;
-    animation: printPaper 2s linear forwards;
+    animation: printPaper 3s ease-in-out forwards;
 }
 
 @keyframes printPaper {
     0% {
+        transform: translateY(-100%);
+    }
+
+    15% {
+        transform: translateY(-66%);
+    }
+    30% {
+        transform: translateY(-66%);
+    }
+
+    45% {
+        transform: translateY(-33%);
+    }
+    60% {
+        transform: translateY(-33%);
+    }
+
+    75% {
+        transform: translateY(0);
     }
     100% {
         transform: translateY(0);
